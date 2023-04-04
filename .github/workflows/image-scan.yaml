@@ -1,0 +1,84 @@
+# https://github.com/marketplace/actions/prisma-cloud-scan
+# https://github.com/PaloAltoNetworks/prisma-cloud-scan
+# https://jordanbeandev.com/how-to-write-a-loop-in-a-github-action-yaml-file/
+
+name: Prisma Cloud Docker Image Scan
+on:
+  pull_request:
+    branches:
+      - 'main'
+
+env:
+  SHA: $(git rev-parse HEAD)
+
+jobs:
+
+  generateDirPaths:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Generate matrix with all modules of WhatTheHack repository
+        id: set-matrix
+        run: |
+          echo "::set-output name=matrix::$(ls -l | grep '^d' | awk -F ' ' '{print $9}' | jq -R -s -c 'split("\n") | map(select(length > 0))')"
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+      
+  build-and-scan:
+  
+    needs: generateDirPaths
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        path: ${{ fromJson(needs.generateDirPaths.outputs.matrix) }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Print Directory Structure
+        run: |
+           ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+
+
+      - name: Check out the repository
+      - uses: actions/checkout@v2
+      
+      #- name: Login to Docker Hub
+      #  uses: docker/login-action@v2
+      #  with:
+      #    username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #    password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Docker Build
+        run: |
+          docker build -t panwdigitalnative/${{ matrix.inputPath }}:latest -t panwdigitalnative/${{ matrix.inputPath }}:${{ env.SHA }} -f ${{ github.workspace }}/${{ matrix.inputPath }}/Dockerfile ${{ github.workspace }}/${{ matrix.inputPath }}    
+        shell: bash {0}   
+
+      - name: Prisma Cloud image scan
+        id: scan
+        uses: PaloAltoNetworks/prisma-cloud-scan@v1
+        with:
+          pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
+          pcc_user: ${{ secrets.PCC_ACCESS_KEY_ID }}
+          pcc_pass: ${{ secrets.PCC_SECRET_ACCESS_KEY }}
+          image_name: panwdigitalnative/${{ matrix.inputPath }}:latest
+
+      # - name: Docker Push
+      #   run: |
+      #     docker push panwdigitalnative/${{ matrix.inputPath }}:${{ env.SHA }}
+      #   shell: bash {0}   
+      # 
+      # # https://app4.prismacloud.io/compute?computeState=%2Fmanage%2Fsystem%2Futilities
+      # - name: Download twistcli from the Prisma Cloud Compute Console
+      #   run: |
+      #      curl --user ${{ secrets.PC_USER }}:${{ secrets.PC_PASSWORD }} --output ./twistcli ${{ secrets.PC_CONSOLE }}/api/v1/util/twistcli
+      #      chmod a+x ./twistcli
+      #            
+      # # Runs twistcli sandbox
+      # - name: Run twistcli sandbox
+      #   run: sudo ./twistcli sandbox --address ${{ secrets.PC_CONSOLE }} --user ${{secrets.PC_USER}} --password ${{secrets.PC_PASSWORD}} --analysis-duration 2m panwdigitalnative/${{ matrix.inputPath }}:${{ env.SHA }}
+
+
+
+
