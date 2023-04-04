@@ -38,9 +38,12 @@ jobs:
       
       - name: Docker Build
         run: |
+          ls -R | grep ":$"
+          echo "--------"
           echo "${{ github.workspace }}/${{ matrix.inputPath }}"
           echo "--------"
-          echo ":$"
+          echo "${{ fromJson(needs.generateDirPaths.outputs.matrix) }}"
+
         shell: bash {0}   
 
       # - name: Prisma Cloud image scan
