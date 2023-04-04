@@ -38,11 +38,10 @@ jobs:
       
       - name: Docker Build
         run: |
-          ls -R | grep ":$"
           echo "--------"
-          echo "${{ github.workspace }}/${{ matrix.inputPath }}"
+          echo "${{ github.workspace }}"
           echo "--------"
-          echo "${{ generateDirPaths.outputs.matrix }}"
+          echo "${{ matrix.inputPath }}"
 
         shell: bash {0}   
 
