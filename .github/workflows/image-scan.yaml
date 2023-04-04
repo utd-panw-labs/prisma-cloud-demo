@@ -34,3 +34,8 @@ jobs:
         run: |
            ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
         shell: bash {0}
+      
+      - name: Docker Build
+        run: |
+          docker build -t panwdigitalnative/${{ matrix.inputPath }}:latest -t panwdigitalnative/${{ matrix.inputPath }}:${{ env.SHA }} -f ${{ github.workspace }}/${{ matrix.inputPath }}/Dockerfile ${{ github.workspace }}/${{ matrix.inputPath }}    
+        shell: bash {0}   
