@@ -16,7 +16,7 @@ jobs:
       - name: Generate matrix with all modules of this repository
         id: set-matrix
         run: |
-          echo "::set-output name=matrix::$(ls -l | grep '^d' | awk -F ' ' '{print $9}' | jq -R -s -c 'split("\n") | map(select(length > 0))')"
+          echo "::set-output name=matrix::$(ls -l docker-images/ | grep '^d' | awk -F ' ' '{print $9}' | jq -R -s -c 'split("\n") | map(select(length > 0))')"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
@@ -33,7 +33,7 @@ jobs:
 
       - name: Docker Build
         run: |
-          docker build -t panwdigitalnative/${{ matrix.path }}:latest -t panwdigitalnative/${{ matrix.path }}:${{ env.SHA }} -f ${{ github.workspace }}/${{ matrix.path }}/Dockerfile ${{ github.workspace }}/${{ matrix.path }}
+          docker build -t panwdigitalnative/${{ matrix.path }}:latest -t panwdigitalnative/${{ matrix.path }}:${{ env.SHA }} -f ${{ github.workspace }}/docker-images/${{ matrix.path }}/Dockerfile ${{ github.workspace }}/docker-images/${{ matrix.path }}
         shell: bash {0}
 
       - name: Prisma Cloud image scan
@@ -86,9 +86,3 @@ jobs:
           download_external_modules: true
           log_level: WARNING
 
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v2
-
-        if: success() || failure()
-        with:
-          sarif_file: results.sarif
