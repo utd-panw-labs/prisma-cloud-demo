@@ -30,19 +30,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      #- name: Print Directory Structure
-      #  run: |
-      #     ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
-      #  shell: bash {0}
       
       - name: Docker Build
         run: |
-          echo "--------"
-          echo "${{ github.workspace }}/${{ matrix.path }}"
-          echo "--------"
-          ls ${{ github.workspace }}/${{ matrix.path }}/
-
+          docker build -t panwdigitalnative/${{ matrix.path }}:latest -t panwdigitalnative/${{ matrix.path }}:${{ env.SHA }} -f ${{ github.workspace }}/${{ matrix.path }}/Dockerfile ${{ github.workspace }}/${{ matrix.path }}
         shell: bash {0}   
 
       # - name: Prisma Cloud image scan
@@ -52,5 +43,5 @@ jobs:
       #     pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
       #     pcc_user: ${{ secrets.PCC_ACCESS_KEY_ID }}
       #     pcc_pass: ${{ secrets.PCC_SECRET_ACCESS_KEY }}
-      #     image_name: panwdigitalnative/${{ matrix.inputPath }}:latest
+      #     image_name: panwdigitalnative/${{ matrix.path }}:latest
 
