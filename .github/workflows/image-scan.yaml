@@ -42,7 +42,7 @@ jobs:
           echo "--------"
           echo "${{ github.workspace }}/${{ matrix.inputPath }}"
           echo "--------"
-          echo "${{ fromJson(needs.generateDirPaths.outputs.matrix) }}"
+          echo "${{ generateDirPaths.outputs.matrix }}"
 
         shell: bash {0}   
 
