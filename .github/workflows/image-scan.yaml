@@ -9,7 +9,7 @@ env:
 
 jobs:
 
-  generateDirPaths:
+  dockerCode:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -21,20 +21,20 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
   build-and-scan:
-    needs: generateDirPaths
+    needs: dockerCode
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        path: ${{ fromJson(needs.generateDirPaths.outputs.matrix) }}
+        path: ${{ fromJson(needs.dockerCode.outputs.matrix) }}
 
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Docker Build
         run: |
           docker build -t panwdigitalnative/${{ matrix.path }}:latest -t panwdigitalnative/${{ matrix.path }}:${{ env.SHA }} -f ${{ github.workspace }}/${{ matrix.path }}/Dockerfile ${{ github.workspace }}/${{ matrix.path }}
-        shell: bash {0}   
+        shell: bash {0}
 
       - name: Prisma Cloud image scan
         id: scan
@@ -45,3 +45,50 @@ jobs:
           pcc_pass: ${{ secrets.PCC_SECRET_ACCESS_KEY }}
           image_name: panwdigitalnative/${{ matrix.path }}:latest
 
+
+
+  terraformCode:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Generate matrix1 with all Terraform code dirs of this repository
+        id: terraform
+        run: |
+          echo "::set-output name=terraform-folders::$(ls -l terraform/ | grep '^d' | awk -F ' ' '{print $9}' | jq -R -s -c 'split("\n") | map(select(length > 0))')"
+    outputs:
+      terraform-folders: ${{ steps.terraform.outputs.terraform-folders }}
+
+  terraform-scan:
+    needs: terraformCode
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      terraform-folders:
+        path: ${{ fromJson(needs.terraformCode.outputs.terraform-folders) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Run Bridgecrew
+        id: Bridgecrew
+        uses: bridgecrewio/bridgecrew-action@master
+        env:
+          PRISMA_API_URL: https://api.eu.prismacloud.io    
+        with:
+          api-key: ${{ secrets.BC_API_KEY }}
+          directory: "${{ github.workspace }}/terraform/${{ terraform-folders.path }}"
+          soft_fail: false
+          framework: terraform
+          output_format: cli,sarif
+          output_file_path: console,results.sarif
+          quiet: false
+          download_external_modules: true
+          log_level: WARNING
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v2
+
+        if: success() || failure()
+        with:
+          sarif_file: results.sarif
