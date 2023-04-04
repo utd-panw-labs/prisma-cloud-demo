@@ -39,9 +39,9 @@ jobs:
       - name: Docker Build
         run: |
           echo "--------"
-          echo "${{ github.workspace }}"
+          echo "${{ github.workspace }}/${{ matrix.path }}"
           echo "--------"
-          echo "${{ matrix.path }}"
+          ls ${{ github.workspace }}/${{ matrix.path }}/
 
         shell: bash {0}   
 
