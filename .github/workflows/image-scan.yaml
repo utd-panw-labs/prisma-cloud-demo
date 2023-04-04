@@ -1,3 +1,4 @@
+
 name: Prisma Cloud Docker Image Scan
 on:
   pull_request:
@@ -30,12 +31,24 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Print Directory Structure
-        run: |
-           ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
-        shell: bash {0}
+      #- name: Print Directory Structure
+      #  run: |
+      #     ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+      #  shell: bash {0}
       
       - name: Docker Build
         run: |
-          docker build -t panwdigitalnative/${{ matrix.inputPath }}:latest -t panwdigitalnative/${{ matrix.inputPath }}:${{ env.SHA }} -f ${{ github.workspace }}/${{ matrix.inputPath }}/Dockerfile ${{ github.workspace }}/${{ matrix.inputPath }}    
+          echo "${{ github.workspace }}/${{ matrix.inputPath }}"
+          echo "--------"
+          echo ":$"
         shell: bash {0}   
+
+      # - name: Prisma Cloud image scan
+      #   id: scan
+      #   uses: PaloAltoNetworks/prisma-cloud-scan@v1
+      #   with:
+      #     pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
+      #     pcc_user: ${{ secrets.PCC_ACCESS_KEY_ID }}
+      #     pcc_pass: ${{ secrets.PCC_SECRET_ACCESS_KEY }}
+      #     image_name: panwdigitalnative/${{ matrix.inputPath }}:latest
+
