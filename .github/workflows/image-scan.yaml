@@ -12,9 +12,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Generate matrix with all modules of WhatTheHack repository
+      - name: Generate matrix with all modules of this repository
         id: set-matrix
         run: |
           echo "::set-output name=matrix::$(ls -l | grep '^d' | awk -F ' ' '{print $9}' | jq -R -s -c 'split("\n") | map(select(length > 0))')"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+  build-and-scan:
+    needs: generateDirPaths
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        path: ${{ fromJson(needs.generateDirPaths.outputs.matrix) }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Print Directory Structure
+        run: |
+           ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+        shell: bash {0}
