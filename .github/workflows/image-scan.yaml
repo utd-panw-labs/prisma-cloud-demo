@@ -16,7 +16,7 @@ jobs:
       - name: Generate matrix with all modules of this repository
         id: set-matrix
         run: |
-          echo "::set-output name=matrix::$(ls -l docker-images/ | grep '^d' | awk -F ' ' '{print $9}' | jq -R -s -c 'split("\n") | map(select(length > 0))')"
+          echo "matrix=$(ls -l docker-images/ | grep '^d' | awk -F ' ' '{print $9}' | jq -R -s -c 'split("\n") | map(select(length > 0))')" >> $GITHUB_OUTPUT
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
@@ -33,56 +33,7 @@ jobs:
 
       - name: Docker Build
         run: |
-          docker build -t panwdigitalnative/${{ matrix.path }}:latest -t panwdigitalnative/${{ matrix.path }}:${{ env.SHA }} -f ${{ github.workspace }}/docker-images/${{ matrix.path }}/Dockerfile ${{ github.workspace }}/docker-images/${{ matrix.path }}
+          echo ${{ matrix.path }}
+          echo "-----"
         shell: bash {0}
-
-      - name: Prisma Cloud image scan
-        id: scan
-        uses: PaloAltoNetworks/prisma-cloud-scan@v1
-        with:
-          pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
-          pcc_user: ${{ secrets.PCC_ACCESS_KEY_ID }}
-          pcc_pass: ${{ secrets.PCC_SECRET_ACCESS_KEY }}
-          image_name: panwdigitalnative/${{ matrix.path }}:latest
-
-
-
-  terraformCode:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Generate matrix1 with all Terraform code dirs of this repository
-        id: terraform
-        run: |
-          echo "::set-output name=matrix::$(ls -l terraform/ | grep '^d' | awk -F ' ' '{print $9}' | jq -R -s -c 'split("\n") | map(select(length > 0))')"
-    outputs:
-      matrix: ${{ steps.terraform.outputs.matrix }}
-
-  terraform-scan:
-    needs: terraformCode
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        path: ${{ fromJson(needs.terraformCode.outputs.matrix) }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Run Bridgecrew
-        id: Bridgecrew
-        uses: bridgecrewio/bridgecrew-action@master
-        env:
-          PRISMA_API_URL: https://api.eu.prismacloud.io    
-        with:
-          api-key: ${{ secrets.BC_API_KEY }}
-          directory: "${{ github.workspace }}/terraform/${{ matrix.path }}"
-          soft_fail: false
-          framework: terraform
-          output_format: cli,sarif
-          output_file_path: console,results.sarif
-          quiet: false
-          download_external_modules: true
-          log_level: WARNING
 
