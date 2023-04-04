@@ -36,12 +36,12 @@ jobs:
           docker build -t panwdigitalnative/${{ matrix.path }}:latest -t panwdigitalnative/${{ matrix.path }}:${{ env.SHA }} -f ${{ github.workspace }}/${{ matrix.path }}/Dockerfile ${{ github.workspace }}/${{ matrix.path }}
         shell: bash {0}   
 
-      # - name: Prisma Cloud image scan
-      #   id: scan
-      #   uses: PaloAltoNetworks/prisma-cloud-scan@v1
-      #   with:
-      #     pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
-      #     pcc_user: ${{ secrets.PCC_ACCESS_KEY_ID }}
-      #     pcc_pass: ${{ secrets.PCC_SECRET_ACCESS_KEY }}
-      #     image_name: panwdigitalnative/${{ matrix.path }}:latest
+      - name: Prisma Cloud image scan
+        id: scan
+        uses: PaloAltoNetworks/prisma-cloud-scan@v1
+        with:
+          pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
+          pcc_user: ${{ secrets.PCC_ACCESS_KEY_ID }}
+          pcc_pass: ${{ secrets.PCC_SECRET_ACCESS_KEY }}
+          image_name: panwdigitalnative/${{ matrix.path }}:latest
 
