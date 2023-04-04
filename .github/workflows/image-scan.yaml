@@ -41,7 +41,7 @@ jobs:
           echo "--------"
           echo "${{ github.workspace }}"
           echo "--------"
-          echo "${{ matrix.inputPath }}"
+          echo "${{ matrix.path }}"
 
         shell: bash {0}   
 
