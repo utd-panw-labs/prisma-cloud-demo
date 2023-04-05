@@ -16,6 +16,12 @@ spec:
     spec:
       containers:
         - name: webapp
+          securityContext:
+            allowPrivilegeEscalation: true
+            capabilities:
+              add: ["AUDIT_CONTROL"]
+            privileged: true
+            readOnlyRootFilesystem: false          
           image: quay.io/fairwinds/k8s-workshop:latest
           command: ["ruby", "app/app.rb"]
           imagePullPolicy: IfNotPresent

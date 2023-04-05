@@ -16,6 +16,9 @@ spec:
         app: guestbook
         version: "1.0"
     spec:
+      securityContext:
+        runAsNonRoot: false
+        runAsUser: 0            
       containers:
       - name: guestbook
         image: ibmcom/guestbook:v1
