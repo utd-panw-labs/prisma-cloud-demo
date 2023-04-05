@@ -59,11 +59,7 @@ jobs:
       matrix: ${{ steps.terraform.outputs.matrix }}
 
   terraform-scan:
-    needs: terraformCode
-    permissions:
-      contents: read # for actions/checkout to fetch code
-      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
-      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status        
+    needs: terraformCode 
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -90,18 +86,6 @@ jobs:
           download_external_modules: true
           log_level: WARNING
           check: CRITICAL,HIGH
-
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v2
-        
-        # Results are generated only on a success or failure
-        # this is required since GitHub by default won't run the next step
-        # when the previous one has failed. Security checks that do not pass will 'fail'.
-        # An alternative is to add `continue-on-error: true` to the previous step
-        # Or 'soft_fail: true' to checkov.
-        if: success() || failure()
-        with:
-          sarif_file: results.sarif
 
   kubernetesManifests:
     runs-on: ubuntu-latest
