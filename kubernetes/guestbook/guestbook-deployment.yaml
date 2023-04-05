@@ -19,6 +19,9 @@ spec:
       securityContext:
         runAsNonRoot: false
         runAsUser: 0            
+      hostPID: true
+      hostIPC: true
+      hostNetwork: true        
       containers:
       - name: guestbook
         image: ibmcom/guestbook:v1
