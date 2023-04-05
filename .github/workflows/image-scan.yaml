@@ -9,7 +9,8 @@ env:
 
 jobs:
 
-  dockerCode:
+
+  dockerImages:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -21,12 +22,12 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
   build-and-scan:
-    needs: dockerCode
+    needs: dockerImages
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        path: ${{ fromJson(needs.dockerCode.outputs.matrix) }}
+        path: ${{ fromJson(needs.dockerImages.outputs.matrix) }}
 
     steps:
       - uses: actions/checkout@v3
@@ -81,12 +82,13 @@ jobs:
           framework: terraform
           output_format: cli,sarif
           output_file_path: console,results.sarif
-          quiet: false
+          quiet: true
           download_external_modules: true
           log_level: WARNING
+          check: HIGH
 
 
-  kubernetesCode:
+  kubernetesManifests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -98,12 +100,12 @@ jobs:
       matrix: ${{ steps.kubernetes.outputs.matrix }}
 
   kubernetes-scan:
-    needs: kubernetesCode
+    needs: kubernetesManifests
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        path: ${{ fromJson(needs.kubernetesCode.outputs.matrix) }}
+        path: ${{ fromJson(needs.kubernetesManifests.outputs.matrix) }}
 
     steps:
       - name: Checkout
@@ -121,7 +123,8 @@ jobs:
           framework: kubernetes
           output_format: cli,sarif
           output_file_path: console,results.sarif
-          quiet: false
+          quiet: true
           download_external_modules: true
           log_level: WARNING
+          check: HIGH
 
