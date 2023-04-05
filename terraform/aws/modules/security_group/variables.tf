@@ -1,7 +1,0 @@
-variable "port" {
-
-}
-
-variable "cidrs" {
-  
-}
