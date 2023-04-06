@@ -19,7 +19,9 @@ spec:
     spec:
       containers:
       - name: redis-slave
-        image: ibmcom/guestbook-redis-slave:v2
+        #image: ibmcom/guestbook-redis-slave:v2
+        image: gcr.io/google_samples/gb-redisslave:v3
+        #image: k8s.gcr.io/redis-slave:v2
         ports:
         - name: redis-server
           containerPort: 6379
