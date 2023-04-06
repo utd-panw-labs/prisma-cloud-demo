@@ -25,7 +25,7 @@ spec:
           #  add: ["AUDIT_CONTROL"]
           #privileged: true
           #readOnlyRootFilesystem: false        
-        image: redis:7.2-rc-bullseye
+        image: redis:7-alpine
         ports:
         - name: redis-server
           containerPort: 6379
