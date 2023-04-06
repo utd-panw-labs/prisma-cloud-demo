@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: redis-slave
-        image: ibmcom/guestbook-redis-slave:v2
+        image: us-central1-docker.pkg.dev/panw-utd-public-cloud/utd-demo-images/utd-cnsp/redis-slave:v1
         ports:
         - name: redis-server
           containerPort: 6379
