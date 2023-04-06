@@ -1,7 +1,7 @@
 FROM golang as builder
 RUN go env -w GO111MODULE=off
 RUN go get github.com/codegangsta/negroni
-RUN go get github.com/gorilla/mux github.com/xyproto/simpleredis
+RUN go get github.com/gorilla/mux gitlab.com/utd-admin/simpleredis
 COPY main.go .
 RUN go build main.go
 

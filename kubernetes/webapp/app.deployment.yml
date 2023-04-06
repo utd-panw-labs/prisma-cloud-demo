@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: webapp
-          image: quay.io/fairwinds/k8s-workshop:latest
+          image: us-central1-docker.pkg.dev/panw-utd-public-cloud/utd-demo-images/utd-cnsp/webapp:v2
           command: ["ruby", "app/app.rb"]
           imagePullPolicy: IfNotPresent
           livenessProbe:
