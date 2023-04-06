@@ -15,8 +15,8 @@ ADD public/script.js /app/public/script.js
 ADD public/style.css /app/public/style.css
 ADD public/jquery.min.js /app/public/jquery.min.js
 
-RUN echo "nobody:x:1:1:nobody:/:/bin/sh" >> /etc/passwd
-RUN echo "nobody:x:1:" >> /etc/group
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
 
 WORKDIR /app
 CMD ["./guestbook"]
