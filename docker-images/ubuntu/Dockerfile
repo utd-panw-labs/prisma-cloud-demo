@@ -2,7 +2,7 @@
 FROM us-central1-docker.pkg.dev/panw-utd-public-cloud/utd-demo-images/utd-cnsp/ubuntu:malware
 
 # Install Nginx
-RUN apt-get -y update && apt-get -y install nginx
+RUN apt-get -qq -y update && apt-get -qq -y install nginx
 
 # Copy the Nginx config
 COPY default /etc/nginx/sites-available/default
