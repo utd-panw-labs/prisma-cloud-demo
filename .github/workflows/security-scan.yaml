@@ -49,10 +49,13 @@ jobs:
       # Runs twistcli sandbox
       - name: Run twistcli sandbox
         run: |
-          # if [ ${{ matrix.path }} = "ubuntu" ]; then
-          curl -s https://utd-packages.s3.amazonaws.com/twistcli --output twistcli
-          chmod +x twistcli
-          sudo ./twistcli sandbox --address ${{ secrets.PCC_CONSOLE_URL }} --user ${{ secrets.PCC_ACCESS_KEY_ID }} --password ${{ secrets.PCC_SECRET_ACCESS_KEY }} --analysis-duration 2m ultimate-test-drive/${{ matrix.path }}:latest
+          if [ ${{ matrix.path }} = "ubuntu" ]; then
+            curl -s https://utd-packages.s3.amazonaws.com/twistcli --output twistcli
+            chmod +x twistcli
+            sudo ./twistcli sandbox --address ${{ secrets.PCC_CONSOLE_URL }} --user ${{ secrets.PCC_ACCESS_KEY_ID }} --password ${{ secrets.PCC_SECRET_ACCESS_KEY }} --analysis-duration 2m ultimate-test-drive/${{ matrix.path }}:latest
+          else
+            echo "Skipping Sandbox analysis for Whitelisted image: ${{ matrix.path }}"
+          fi
 
   terraformCode:
     runs-on: ubuntu-latest
