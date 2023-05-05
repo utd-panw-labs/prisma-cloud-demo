@@ -43,6 +43,11 @@ spec:
               name: accounts-db-config
           - configMapRef:
               name: demo-data-config
+        env:
+          - name: ENABLE_METRICS
+            value: "false"
+          - name: ENABLE_TRACING
+            value: "false"                
         ports:
           - containerPort: 5432
             name: postgredb

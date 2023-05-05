@@ -33,6 +33,11 @@ spec:
           image: gcr.io/bank-of-anthos-ci/ledger-db:v0.5.11
           ports:
             - containerPort: 5432
+          env:
+          - name: ENABLE_METRICS
+            value: "false"
+          - name: ENABLE_TRACING
+            value: "false"                  
           envFrom:
             - configMapRef:
                 name: environment-config

@@ -41,7 +41,7 @@ spec:
               - all
           privileged: false
           readOnlyRootFilesystem: true
-        image: gcr.io/bank-of-anthos-ci/balancereader:v0.5.11
+        image: gcr.io/bank-of-anthos-ci/balancereader:v0.5.10
         volumeMounts:
         - name: publickey
           mountPath: "/tmp/.ssh"
@@ -50,14 +50,14 @@ spec:
           name: tmp
         env:
         - name: VERSION
-          value: "v0.5.11"
+          value: "v0.5.10"
         - name: PORT
           value: "8080"
         # toggle Cloud Trace export
         - name: ENABLE_TRACING
-          value: "true"
+          value: "false"
         - name: ENABLE_METRICS
-          value: "true"
+          value: "false"
         - name: POLL_MS
           value: "100"
         - name: CACHE_SIZE

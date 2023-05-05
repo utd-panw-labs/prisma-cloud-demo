@@ -53,6 +53,10 @@ spec:
           value: "5"
         - name: LOG_LEVEL
           value: "error"
+        - name: ENABLE_METRICS
+          value: "false"
+        - name: ENABLE_TRACING
+          value: "false"          
         resources:
           requests:
             cpu: 100m
