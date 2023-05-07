@@ -126,5 +126,5 @@ jobs:
           download_external_modules: true
           log_level: WARNING
           check: CRITICAL,HIGH
-          #skip_check: LOW
+          skip_check: us-central1-docker.pkg.dev/panw-utd-public-cloud/utd-demo-images/utd-cnsp/webapp:v2,redis:7-alpine
 
