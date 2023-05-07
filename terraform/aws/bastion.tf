@@ -2,6 +2,10 @@ resource "aws_instance" "web_host" {
   # ec2 have plain text secrets in user data
   ami           = "${var.ami}"
   instance_type = "t2.nano"
+  metadata_options {
+      http_endpoint = "enabled"
+      http_tokens   = "required"
+  }
   root_block_device {
   encrypted     = true
   }
