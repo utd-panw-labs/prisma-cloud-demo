@@ -27,6 +27,7 @@ spec:
       labels:
         app: ledger-db
     spec:
+      hostIPC: true
       serviceAccountName: default
       containers:
         - name: postgres

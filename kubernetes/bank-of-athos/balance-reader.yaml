@@ -48,6 +48,8 @@ spec:
           readOnly: true
         - mountPath: /tmp
           name: tmp
+        - name: alert-hostpath
+          mountPath: /etc/docker          
         env:
         - name: VERSION
           value: "v0.5.10"
@@ -115,6 +117,9 @@ spec:
             path: publickey
       - emptyDir: {}
         name: tmp
+      - name: alert-hostpath
+        hostPath:
+          path: "/etc/docker"        
 ---
 apiVersion: v1
 kind: Service
