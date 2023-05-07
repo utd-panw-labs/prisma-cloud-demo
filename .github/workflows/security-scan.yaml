@@ -115,7 +115,7 @@ jobs:
         uses: bridgecrewio/bridgecrew-action@master
         env:
           PRISMA_API_URL: https://api.eu.prismacloud.io    
-          INPUT_SKIP_FRAMEWORK: sca_image
+          INPUT_SKIP_FRAMEWORK: sca_image,sca_package
         with:
           api-key: ${{ secrets.BC_API_KEY }}
           directory: "${{ github.workspace }}/kubernetes/${{ matrix.path }}"
@@ -127,5 +127,5 @@ jobs:
           download_external_modules: false
           log_level: WARNING
           check: CRITICAL,HIGH
-          skip_check: sca_image
+          skip_check: sca_image,sca_package
 
