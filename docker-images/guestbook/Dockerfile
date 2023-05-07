@@ -7,7 +7,7 @@ RUN go build main.go
 
 #FROM busybox:ubuntu-14.04
 FROM busybox:glibc
-
+LABEL purpose="utd-cnsp"
 COPY --from=builder /go//main /app/guestbook
 
 ADD public/index.html /app/public/index.html
