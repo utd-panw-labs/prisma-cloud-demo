@@ -112,7 +112,7 @@ jobs:
 
       - name: Run Bridgecrew
         id: Bridgecrew
-        uses: bridgecrew/bridgecrew:2.3.151
+        uses: bridgecrewio/bridgecrew-action@v1.2013.0
         env:
           PRISMA_API_URL: https://api.eu.prismacloud.io    
         with:
