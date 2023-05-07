@@ -1,5 +1,5 @@
 FROM ruby:2
-
+LABEL purpose="utd-cnsp"
 RUN apt-get update && \
     apt-get install -y net-tools
 
