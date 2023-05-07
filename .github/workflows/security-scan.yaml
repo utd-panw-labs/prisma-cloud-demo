@@ -115,12 +115,12 @@ jobs:
         uses: bridgecrewio/bridgecrew-action@master
         env:
           PRISMA_API_URL: https://api.eu.prismacloud.io    
+          INPUT_SKIP_FRAMEWORK: sca_image
         with:
           api-key: ${{ secrets.BC_API_KEY }}
           directory: "${{ github.workspace }}/kubernetes/${{ matrix.path }}"
           soft_fail: false
           framework: kubernetes
-          skip_framework: sca_image
           output_format: cli,sarif
           output_file_path: console,results.sarif
           quiet: true
