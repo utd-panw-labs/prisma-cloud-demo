@@ -134,6 +134,6 @@ jobs:
           quiet: false
           download_external_modules: true
           log_level: WARNING
-          check: CRITICAL,HIGH
-          skip_check: "sca_image"
+          check: CKV_K8S*
+          #skip_check: "sca_image"
 
