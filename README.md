@@ -7,3 +7,4 @@ The repository has 3 main folders: Terraform, DockerImages and Kubernetes and co
 - Deploy a couple of sample applications on a Kubernetes cluster.
 
 Note: The code isn't production ready and is intentionally misconfigured. This is only for demonstration purposes.
+
