@@ -129,11 +129,11 @@ jobs:
           directory: "${{ github.workspace }}/kubernetes/${{ matrix.path }}"
           soft_fail: false
           framework: kubernetes
-          output_format: cli
-          output_file_path: console
-          quiet: false
+          output_format: cli,sarif
+          output_file_path: console,results.sarif
+          quiet: true          
           download_external_modules: true
           log_level: WARNING
-          check: CKV_K8S*
+          check: CKV_K8S*,CRITICAL,HIGH
           #skip_check: "sca_image"
 
